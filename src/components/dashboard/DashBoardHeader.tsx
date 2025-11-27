@@ -36,7 +36,7 @@ const DashBoardHeader = () => {
             <div className='container'>
                 <div className='d-flex align-items-center'>
                     <div className='logo'>
-                        <Link href="">
+                        <Link href="" className='logo'>
                             <Image src={LogoBlack} alt='' className='img-theme-white' />
                             <Image src={LogoYellow} alt='' className='img-theme-black' />
                         </Link>
