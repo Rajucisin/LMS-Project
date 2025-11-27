@@ -4,6 +4,10 @@ import { useSearchParams, useRouter } from "next/navigation";
 
 type Country = { id: string; flag: string; name: string; code: string };
 
+interface Props {
+  paramKey?: string;
+}
+
 const countries: Country[] = [
   { id: "us", flag: "us", name: "USA", code: "+1" },
   { id: "in", flag: "in", name: "India", code: "+91" },
@@ -11,9 +15,7 @@ const countries: Country[] = [
   { id: "za", flag: "za", name: "South Africa", code: "+27" },
 ];
 
-
-
-const CountryPhoneInput = ({ paramKey = "lang" }) => {
+const CountryPhoneInput: React.FC<Props> = ({ paramKey = "lang" }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -53,11 +55,8 @@ const CountryPhoneInput = ({ paramKey = "lang" }) => {
   }, [dropdownOpen]);
 
   return (
-    <div
-      className="d-flex align-items-center position-relative"
-      style={{ maxWidth: "360px" }}
-    >
-      {/* Country dropdown */}
+    <div className="d-flex align-items-center position-relative" style={{ maxWidth: "360px" }}>
+      
       <div className="dropdown me-2" ref={dropdownRef}>
         <button
           className="btn btn-light d-flex align-items-center"
@@ -70,10 +69,7 @@ const CountryPhoneInput = ({ paramKey = "lang" }) => {
         </button>
 
         {dropdownOpen && (
-          <ul
-            className="dropdown-menu show"
-            style={{ maxHeight: "200px", overflowY: "auto" }}
-          >
+          <ul className="dropdown-menu show" style={{ maxHeight: "200px", overflowY: "auto" }}>
             {countries.map((country) => (
               <li key={country.id}>
                 <button
@@ -87,11 +83,9 @@ const CountryPhoneInput = ({ paramKey = "lang" }) => {
               </li>
             ))}
           </ul>
-          
         )}
       </div>
 
-      {/* Phone input */}
       <input
         type="tel"
         className="form-control"
