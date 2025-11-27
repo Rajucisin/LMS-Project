@@ -2,27 +2,32 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
-const countries = [
-  { id: "us", class: "us", name: "United States", code: "+1" },
-  { id: "in", class: "in", name: "India", code: "+91" },
-  { id: "am", class: "am", name: "Armenia", code: "+374" },
-  { id: "za", class: "za", name: "South Africa", code: "+27" },
+type Country = { id: string; flag: string; name: string; code: string };
+
+const countries: Country[] = [
+  { id: "us", flag: "us", name: "USA", code: "+1" },
+  { id: "in", flag: "in", name: "India", code: "+91" },
+  { id: "am", flag: "am", name: "Armenia", code: "+374" },
+  { id: "za", flag: "za", name: "South Africa", code: "+27" },
 ];
+
+
 
 const CountryPhoneInput = ({ paramKey = "lang" }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const [selectedCountry, setSelectedCountry] = useState(
-    countries.find((c) => c.id === (searchParams.get(paramKey) || "us"))
-  );
+  const [selectedCountry, setSelectedCountry] = useState<Country>(() => {
+    const id = searchParams.get(paramKey) || "us";
+    return countries.find((c) => c.id === id) || countries[0];
+  });
 
   const [phoneNumber, setPhoneNumber] = useState("");
 
-  const changeCountry = (country) => {
+  const changeCountry = (country: Country) => {
     setSelectedCountry(country);
     const newUrl = new URL(window.location.href);
     newUrl.searchParams.set(paramKey, country.id);
@@ -30,8 +35,8 @@ const CountryPhoneInput = ({ paramKey = "lang" }) => {
     setDropdownOpen(false);
   };
 
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
       setDropdownOpen(false);
     }
   };
@@ -59,7 +64,7 @@ const CountryPhoneInput = ({ paramKey = "lang" }) => {
           type="button"
           onClick={() => setDropdownOpen(!dropdownOpen)}
         >
-          <span className={`flag-icon ${selectedCountry.class} me-2`}></span>
+          <span className={`flag-icon ${selectedCountry.flag} me-2`}></span>
           <span>{selectedCountry.name}</span>
           <span className="ms-2 text-muted">{selectedCountry.code}</span>
         </button>
@@ -75,13 +80,14 @@ const CountryPhoneInput = ({ paramKey = "lang" }) => {
                   className="dropdown-item d-flex align-items-center"
                   onClick={() => changeCountry(country)}
                 >
-                  <span className={`flag-icon ${country.class} me-2`}></span>
+                  <span className={`flag-icon ${country.flag} me-2`}></span>
                   <span className="flex-grow-1">{country.name}</span>
                   <span className="text-muted ms-2">{country.code}</span>
                 </button>
               </li>
             ))}
           </ul>
+          
         )}
       </div>
 
